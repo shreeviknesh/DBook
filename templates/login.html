@@ -1,0 +1,58 @@
+{% extends 'template.html' %}
+{% block title %}
+    DBook - Login
+{% endblock %}
+
+{% block header %}
+    <a class="nav-link active" href="/login">Login</a>
+    <a class="nav-link" href="/register">Register</a>
+{% endblock %}
+
+{% block content %}
+    <form action="/login" method="post">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="text-center border-bottom pb-1">Login</legend>
+            
+            <div class="form-group">
+                {{ form.username.label(class="form-control-label") }}
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control is-invalid", placeholder="Username") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.username.errors %}
+                            <span>{{ error }}</span>  
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.username(class="form-control", placeholder="Username") }} 
+                {% endif %}         
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class="form-control-label") }}
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control is-invalid", placeholder="Password") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.password.errors %}
+                            <span>{{ error }}</span>  
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.password(class="form-control", placeholder="Password") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group text-center">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+    <div class="text-center">
+        <small class="text-muted">
+            <a href="#">Forgot Password?</a>
+        </small>
+    </div>
+    <div class="text-center">
+        <small class="text-muted">
+            Don't Have An Account? <a href="{{url_for('register_route')}}">Register</a>
+        </small>
+    </div>
+{% endblock %}
