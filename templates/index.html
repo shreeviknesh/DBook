@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block header %}
-    <a class="nav-link" href="/login">Login</a>
-    <a class="nav-link" href="/register">Register</a>
+    <a class="nav-link" href="{{ url_for('login_route') }}">Login</a>
+    <a class="nav-link" href="{{ url_for('register_route') }}">Register</a>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
         <h1 class="cover-heading">Welcome to DBook.</h1>
         <p class="lead">DBook is a simple Social Network.</p>
         <p class="lead">
-            <a href="/register" class="btn btn-md btn-secondary">Register</a>
+            <a href="{{ url_for('register_route') }}" class="btn btn-md btn-secondary">Register</a>
         </p>
     </main>
 

@@ -18,7 +18,7 @@ def isUserLoggedIn():
 
 @app.route('/')
 def index_route():
-    session['username'] = 'shreeviknesh'
+    # session['username'] = 'shreeviknesh'
     if isUserLoggedIn():
         flash(f'Already logged in as {session["username"]}','info')
         return redirect(url_for('profile_route', username=session['username']))
@@ -89,6 +89,26 @@ def profile_route(username):
         flash('Login first to view profiles!', 'danger')
         return redirect(url_for('login_route'))
 
+@app.route('/profile/<string:username1>/add/<string:username2>')
+def add_friend_route(username1, username2):
+    if isUserLoggedIn():
+        user1, user2 = findUserByName(mongo, username1), findUserByName(mongo, username2)
+        if user1 is None or user2 is None:
+            flash('User not found!', 'danger')
+            return redirect(url_for('finder_route'))
+        
+        if username2 in user1['friends']:
+            flash(f'{username2} is already your friend!', 'info')
+            return redirect(url_for('finder_route'))
+
+        addFriendToUser(mongo, username1, username2)
+        addFriendToUser(mongo, username2, username1)
+
+        flash('Friend added! Congratulations!', 'success')
+        return redirect(url_for('finder_route'))
+    else:
+        flash('Login first to add friends!', 'danger')        
+        return redirect(url_for('login_route'))
 
 @app.route('/logout')
 def logout_route():
@@ -98,6 +118,15 @@ def logout_route():
 
     flash('Logged out successfully!', 'success')
     return redirect(url_for('index_route'))
+
+@app.route('/finder')
+def finder_route():
+    if isUserLoggedIn():
+        users = findAllUsers(mongo)
+        return render_template('finder.html', users=users)
+    else:
+        flash('Login to find other users!', 'danger')
+        return redirect(url_for('login_route'))
 
 if __name__ == '__main__':
     app.run(host='localhost', port=80, debug=True)

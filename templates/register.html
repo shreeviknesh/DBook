@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block header %}
-    <a class="nav-link" href="/login">Login</a>
-    <a class="nav-link active" href="/register">Register</a>
+    <a class="nav-link" href="{{ url_for('login_route') }}">Login</a>
+    <a class="nav-link active" href="{{ url_for('register_route') }}">Register</a>
 {% endblock %}
 
 {% block content %}
-    <form action="/register" method="post">
+    <form action="{{ url_for('register_route') }}" method="post">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <legend class="text-center border-bottom pb-1">Register</legend>
@@ -87,7 +87,7 @@
     </form>
     <div class="text-center">
         <small class="text-muted">
-            Already Have An Account? <a href="{{url_for('login_route')}}">Login</a>
+            Already Have An Account? <a href="{{ url_for('login_route') }}">Login</a>
         </small>
     </div>
 {% endblock %}

@@ -6,7 +6,8 @@
 
 {% block header %}
     <a class="nav-link active" href="/{{ url_for('profile_route', username= user['username'] ) }}">Profile</a>
-    <a class="nav-link" href="/logout">Logout</a>
+    <a class="nav-link" href="{{ url_for('finder_route') }}">Finder</a>
+    <a class="nav-link" href="{{ url_for('logout_route') }}">Logout</a>
 {% endblock %}
 
 {% block content %}
@@ -24,10 +25,19 @@
                 <span>+91-{{ user['phone'] }}</span>
             </div>
         </div>
-        
-        
-        <span style="color: turquoise">Total Friends-</span>
-        <span>{{ user['numFriends'] }}</span>
-        
+        <div class="border-bottom pb-2"></div>
+
+        <div class="mt-2 text-center">
+            <h6 style="color:#01FF70;">Friends- [Total- {{ user['numFriends'] }}]</h6>
+            {% if user['friends'] %}
+                {% for friend in user['friends'] %}
+                    <div>
+                        <a href="{{ url_for('profile_route', username=friend) }}" style="color:#3D9970;">{{ friend }}</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                User has no friends..
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'template.html' %}
+
+{% block title %}
+    DBook - Welcome
+{% endblock %}
+
+{% block header %}
+    <a class="nav-link" href="{{ url_for('profile_route', username= session['username'] ) }}">Profile</a>
+    <a class="nav-link active" href="{{ url_for('finder_route') }}">Finder</a>
+    <a class="nav-link" href="{{ url_for('logout_route') }}">Logout</a>
+{% endblock %}
+
+{% block content %}
+    <legend class="text-center border-bottom pb-1">Other Users-</legend>
+    <div class="card-deck">
+        {% for user in users %}
+            {% if user['username'] != session['username'] %}
+                <div class="card m-1" style="min-width: 20rem; max-width: 20rem;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color:#001f3f;">{{ user['username'] }}</h5>
+                        <p class="card-text mb-0" style="color:#FF4136;">Some description about {{ user['username'] }}</p>
+                        <p class="card-text" style="color:#F012BE;">Total Friends- {{ user['numFriends'] }}</p>
+                        <a class="btn btn-outline-info" href="{{ url_for('profile_route', username=user['username']) }}" class="card-link">View Profile</a>
+                        <a class="btn btn-outline-success" href="{{ url_for('add_friend_route', username1 = session['username'], username2 = user['username']) }}" class="card-link">Add Friend</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

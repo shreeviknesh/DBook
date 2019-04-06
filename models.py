@@ -17,3 +17,20 @@ def insertUser(mongo, form):
 def findAllUsers(mongo):
     allUsers = mongo.db.users.find({})
     return list(allUsers)
+
+def addFriendToUser(mongo, user, friend):
+    findQuery = {"username": user}
+    user_document = mongo.db.users.find_one(findQuery)
+    friends = user_document['friends']
+
+    friends.append(friend)
+    numFriends = len(friends)
+
+    updateQuery = {
+        "$set": {
+            "friends": friends,
+            "numFriends": numFriends
+        }
+    }
+
+    mongo.db.users.update_one(findQuery, updateQuery)
