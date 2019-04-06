@@ -40,7 +40,7 @@ def register_route():
             insertUser(mongo, request.form)
 
             session['username'] = username
-            
+
             flash(f'User {username} created successfully!', 'success')
             return redirect(url_for('profile_route', username=username))
         else:
@@ -79,7 +79,7 @@ def login_route():
 def profile_route(username):
     if isUserLoggedIn():
         user = findUserByName(mongo, username)
-        
+
         if user is None:
             flash(f'{username} user not found!', 'danger')
             return redirect(url_for('profile_route', username=session['username']))
@@ -96,7 +96,7 @@ def add_friend_route(username1, username2):
         if user1 is None or user2 is None:
             flash('User not found!', 'danger')
             return redirect(url_for('finder_route'))
-        
+
         if username2 in user1['friends']:
             flash(f'{username2} is already your friend!', 'info')
             return redirect(url_for('finder_route'))
@@ -107,7 +107,7 @@ def add_friend_route(username1, username2):
         flash('Friend added! Congratulations!', 'success')
         return redirect(url_for('finder_route'))
     else:
-        flash('Login first to add friends!', 'danger')        
+        flash('Login first to add friends!', 'danger')
         return redirect(url_for('login_route'))
 
 @app.route('/logout')
@@ -129,4 +129,4 @@ def finder_route():
         return redirect(url_for('login_route'))
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=80, debug=True)
+    app.run(host='localhost', port=80, debug=False)
