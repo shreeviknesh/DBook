@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ url_for('static', filename = 'img/logo.png') }}">
     <title>{% block title %}{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
@@ -30,11 +31,11 @@
           {% for category, message in messages %}
             <div class="alert alert-{{category}}">
               {{message}}
-            </div> 
+            </div>
           {% endfor %}
         {% endif %}
       {% endwith %}
-      
+
       {% block content %}
       {% endblock %}
     </div>
