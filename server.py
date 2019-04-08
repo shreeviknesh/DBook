@@ -119,14 +119,30 @@ def logout_route():
     flash('Logged out successfully!', 'success')
     return redirect(url_for('index_route'))
 
-@app.route('/finder')
+@app.route('/finder', methods=['POST', 'GET'])
 def finder_route():
     if isUserLoggedIn():
-        users = findAllUsers(mongo)
-        return render_template('finder.html', users=users)
+        if request.method == 'POST':
+            username = request.form['username']
+            found_user = findUserByName(mongo, username)
+
+            if found_user is None:
+                related_users = findUserStartsWith(mongo, username)
+
+                if len(related_users) == 0:
+                    flash(f'User {username} not found!', 'danger')
+                else:
+                    flash(f'{len(related_users)} users found!', 'success')
+                return render_template('finder.html', users=related_users)
+            else:
+                flash(f'User found!', 'success')
+                return(render_template('finder.html', users=[found_user]))
+        else:
+            users = findAllUsers(mongo)
+            return render_template('finder.html', users=users)
     else:
         flash('Login to find other users!', 'danger')
         return redirect(url_for('login_route'))
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=80, debug=False)
+    app.run(host='localhost', port=5000, debug=True)

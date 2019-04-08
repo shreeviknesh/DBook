@@ -34,3 +34,9 @@ def addFriendToUser(mongo, user, friend):
     }
 
     mongo.db.users.update_one(findQuery, updateQuery)
+
+def findUserStartsWith(mongo, startName):
+    users = findAllUsers(mongo)
+    users = list(filter(lambda x: x['username'].startswith(startName), users))
+
+    return users
