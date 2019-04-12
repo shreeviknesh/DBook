@@ -13,8 +13,36 @@
 {% block content %}
     <div class="jumbotron text-center" style="background: #222;">
         <img src="{{ url_for('static', filename = 'img/profile.png') }}" alt="profile-image" id="profile-image" style="border-radius: 30%; width: 125px;">
-        <h2 class="border-bottom pb-3">{{ user['username'] }}</h2>
+        <h2>{{ user['username'] }}</h2>
 
+        {% if session['username'] == user['username'] %}
+        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModal">
+            Delete Account
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Are you sure?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color: red;">
+                        Are you sure you want to delete your account?
+                        <br>
+                        This action is permanent.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <form action="{{ url_for('delete_route', username=user['username']) }}" method="POST">
+                            <button type="submit" class="btn btn-danger">Delete Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <div class="row">
             <div class="col">
                 <span style="color: turquoise">Email:</span>

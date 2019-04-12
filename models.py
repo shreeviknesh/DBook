@@ -40,3 +40,24 @@ def findUserStartsWith(mongo, startName):
     users = list(filter(lambda x: x['username'].startswith(startName), users))
 
     return users
+
+def deleteUser(mongo, username):
+    mongo.db.users.delete_one({'username': username})
+
+    users = findAllUsers(mongo)
+
+    for user in users:
+        if username in user['friends']:
+            friends = user['friends']
+            friends.remove(username)
+            numFriends = user['numFriends'] - 1
+
+            selectQuery = {'username': user['username']}
+            updateQuery = {
+                '$set': {
+                    'friends': friends,
+                    'numFriends': numFriends
+                }
+            }
+            mongo.db.users.update_one(selectQuery, updateQuery)
+    

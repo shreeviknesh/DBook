@@ -18,7 +18,6 @@ def isUserLoggedIn():
 
 @app.route('/')
 def index_route():
-    # session['username'] = 'shreeviknesh'
     if isUserLoggedIn():
         flash(f'Already logged in as {session["username"]}','info')
         return redirect(url_for('profile_route', username=session['username']))
@@ -92,9 +91,17 @@ def profile_route(username):
 @app.route('/profile/<string:username1>/add/<string:username2>')
 def add_friend_route(username1, username2):
     if isUserLoggedIn():
+        if username1 == username2:
+            flash('Cannot add yourself as friend', 'warning')
+            return redirect(url_for('finder_route'))
+
         user1, user2 = findUserByName(mongo, username1), findUserByName(mongo, username2)
         if user1 is None or user2 is None:
             flash('User not found!', 'danger')
+            return redirect(url_for('finder_route'))
+
+        if user2 in user1['friends']:
+            flash(f'{user2} is already your friend!', 'warning')
             return redirect(url_for('finder_route'))
 
         if username2 in user1['friends']:
@@ -142,6 +149,24 @@ def finder_route():
             return render_template('finder.html', users=users)
     else:
         flash('Login to find other users!', 'danger')
+        return redirect(url_for('login_route'))
+
+@app.route('/delete/<string:username>', methods=['POST'])
+def delete_route(username):
+    if isUserLoggedIn():
+        user = findUserByName(mongo, username)
+        if user is None:
+            flash('User not found!', 'danger')
+            return redirect(url_for('profile_route', username=session['username']))
+        else:
+            deleteUser(mongo, username)            
+            session.clear()
+            app.config['SECRET_KEY'] = secrets.token_hex(16)
+            
+            flash('Account has been successfully deleted!', 'success')
+            return redirect(url_for('index_route'))
+    else:
+        flash('Login first to delete your account!', 'danger')
         return redirect(url_for('login_route'))
 
 if __name__ == '__main__':
